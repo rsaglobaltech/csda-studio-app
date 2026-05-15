@@ -1,0 +1,33 @@
+{
+  "specops_manifest_version": 1,
+  "packs": {
+    "csdastudioapp/frontend": {
+      "version": "v0.1.0",
+      "files": {
+        "AI_RULES.md": "9ddda976e566accf3fa64d22a8fb5147984425119673824ce0305e0da0b39b8e",
+        "spec.md": "b0b8a3f1414c6fa8278f982fe087da5a0522dedd73e44c1f6582cb4b1a56ad7e",
+        "features/pack-browsing/load_pack.feature": "fd592f284f44b353c85e1b83b1ae1f1ddc720daa7b759c4228a992652854aa36",
+        "features/pack-browsing/validate_schema.feature": "f22c520274b7a03868000f8c0c97fdd28c55fbf5cf019512c83dccc5982deb97",
+        "features/pack-browsing/browse_requirements.feature": "3691f6b4ca7721a808a03ea7710a6f55d9c9aca790cd350330aedd2cbceecef9",
+        "features/pack-browsing/entity_detail.feature": "77227e817469978c1f7523f9ec854a65930d72d7cec6e327721c8d7d352c83aa",
+        "features/pack-insights/render_graph.feature": "760cb6a554a91ca0040c2a32f70b1ccfcf703144eda5fee91a11de3738972bc8",
+        "features/pack-insights/dangling_references.feature": "d56458301312555fcda618d4beea4b6b1e5ab975d7568180fc3f7a5e5e092c78",
+        "features/pack-insights/scenario_lint.feature": "652766051ab7daa200545760882ca7f3bbd3979ed19d142fbbd43d1b73832b82",
+        "features/pack-browsing/filter_by_status.feature": "2232512bed80c449bd8087a3ca7a999f8151c5e9189b11b425f08fdd15af128c",
+        "features/pack-browsing/search_entities.feature": "112e54f9883a441c9b30a87ad55d7664d100409465706860caccc46444f03542",
+        "features/studio-shell/remember_last_path.feature": "5e86acce72b2ec11e713ec346466468b3c1efc96a974e7368bbc87024b14a0cd",
+        "features/studio-shell/theme_toggle.feature": "91a3f02f67da3bc3d590c17fc1901bc80f3b24fc0669cd090ef70f65197a53ad",
+        "features/studio-shell/empty_state.feature": "0dee396948bdfe10e388c30e4bfe12114296c7df310248be00f3789c2954f84c",
+        "features/studio-shell/keyboard_shortcut.feature": "1758fe521cb64aa7899c27e01fa64516c7b1f406b8c1a1378e5692b2e0f8ae9e",
+        "features/studio-shell/static_deployment.feature": "9be91a4f3f7a795bd5d60c576651bb2960a2acdaf177d20dde38716f09c8477a",
+        "features/studio-shell/health_endpoint.feature": "1814d7f07753674746e56ca3997148450fe55bfe352cb9f03e6e3197354d7686",
+        "docs/specs/domain-model.md": "2892b618c679aadbb04f7d993a1045b124e6b94d2db778dd0a3c4214bebeb3b3",
+        "docs/specs/use-cases.md": "22faf7b44078202806b9527278956dc8a1da3dc11253a400f50de2f92f9e651e",
+        "docs/specs/commands.md": "a72d22c5c2535c6049408b61c4fccf4df4bbae9a9779afa61c5da5d1d406ec86",
+        "docs/specs/events.md": "bdbc91e29465c376fd29f3bb57b4bf6582d1a1e044696494c850506baa52bf5e",
+        "docs/specs/aggregates.md": "4a5c73a327fb02c603fb1dd992e4f96618c712273a6e4d016fb2ec95af00818c",
+        "docs/specs/traceability.md": "4deaead7fd79127689ac611b84d05104a632bd3b3cea0398f1ca025d82df1117"
+      }
+    }
+  }
+}

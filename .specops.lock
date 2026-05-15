@@ -1,0 +1,21 @@
+{
+  "specops_version": 1,
+  "csda_version": "0.1.4",
+  "packs": [
+    {
+      "repo": "https://github.com/rsaglobaltech/csda-studio-specops.git",
+      "version": "v0.1.0",
+      "commit": "bafd153d41fd1ebb26ee64050048771b048111f2",
+      "pack_id": "csdastudioapp/frontend",
+      "expanded_at": "2026-05-15T16:44:38.941Z",
+      "vars": {
+        "PROJECT_NAME": "Csda Studio",
+        "PROJECT_SLUG": "csda-studio-app",
+        "DOMAIN": "spec-driven authoring",
+        "STACK": "Vite + React 18 + TypeScript 5 + Tailwind",
+        "API_STYLE": "browser-only, no network",
+        "TESTING": "Vitest + Playwright + Cucumber-JS"
+      }
+    }
+  ]
+}
