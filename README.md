@@ -65,6 +65,37 @@ REQ-001..REQ-014 are next, via `csda harness run`.
   fail. `vitest.config.ts` carries no React plugin, which also means the unit
   suite cannot accidentally reach into `src/ui`.
 
+## Driving it with an agent
+
+The harness is wired: `harness.config.yaml` plus `.harness/prompt-prefix.md`.
+Check what an agent would be told before paying for it:
+
+```bash
+csda harness prompt REQ-001               # print the prompt, invoke nothing
+csda harness run --req REQ-001 --dry-run
+```
+
+Then run it, naming the agent explicitly:
+
+```bash
+csda harness run --req REQ-001 --agent "claude -p < {prompt_file}"
+```
+
+The agent command is **not** defaulted in `harness.config.yaml`. Which agent
+runs this is the operator's choice and their credentials, and a default in a
+committed file is a default somebody pays for by accident.
+
+The gate is `npm run verify`, deliberately not `test:e2e` — that runs all
+sixteen scenarios and stays red until the last requirement lands. Each
+requirement's own scenario is run by name instead, so a requirement still
+cannot pass its gate without one.
+
+The prompt prefix carries the boundary that matters: the agent may edit
+`src/**`, `tests/**` and `features/step_definitions/**`, and must not touch
+`features/**/*.feature` or `docs/specs/**`. Those come from the domain pack.
+An agent that edits a scenario so its own code passes has turned a
+spec-driven run into an ordinary one.
+
 ## Recommended Workflow
 1. Define or refine `spec.md`.
 2. Refine domain model documents in `docs/specs/`.
