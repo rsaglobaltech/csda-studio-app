@@ -1,0 +1,39 @@
+{
+  "name": "csda-studio-app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "CsdaStudio — a local, read-only viewer for a spec-driven project's specs and domain packs.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --port 4173",
+    "test": "vitest run --config vitest.config.ts",
+    "test:watch": "vitest --config vitest.config.ts",
+    "typecheck": "tsc --noEmit",
+    "verify": "npm run typecheck && npm run test && npm run build",
+    "test:e2e": "node --import tsx node_modules/@cucumber/cucumber/bin/cucumber.js",
+    "test:e2e:req015": "npm run test:e2e -- --name \"The deployment exposes a health JSON\""
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "mermaid": "^11.4.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^11.2.0",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^22.10.2",
+    "@types/react": "^18.3.17",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5",
+    "vitest": "^2.1.8",
+    "tsx": "^4.19.2"
+  }
+}
