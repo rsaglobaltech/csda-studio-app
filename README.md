@@ -85,10 +85,25 @@ The agent command is **not** defaulted in `harness.config.yaml`. Which agent
 runs this is the operator's choice and their credentials, and a default in a
 committed file is a default somebody pays for by accident.
 
-The gate is `npm run verify`, deliberately not `test:e2e` — that runs all
-sixteen scenarios and stays red until the last requirement lands. Each
-requirement's own scenario is run by name instead, so a requirement still
-cannot pass its gate without one.
+The gate is three commands:
+
+```
+npm ci && npm run verify && npm run test:e2e -- {feature_file}
+```
+
+`npm ci` because each requirement runs in a fresh git worktree, which contains
+only what git tracks — no `node_modules`. The first REQ-001 run lost an attempt
+to a 900-second timeout learning that.
+
+`{feature_file}` is substituted per requirement, so the third command runs the
+scenario under test **and only that one**. The full suite stays red until the
+last requirement lands, so it cannot be the gate itself.
+
+That third command is not garnish. The gate runs *before* `csda done`, so the
+requirement is still Draft and `validate --strict-tdd` does not demand its test
+either. Without it the loop can mark a requirement Implemented with its
+scenario never executed — which is exactly what the first REQ-001 run did. The
+scenario passed because the agent did the job, not because anything checked.
 
 The prompt prefix carries the boundary that matters: the agent may edit
 `src/**`, `tests/**` and `features/step_definitions/**`, and must not touch

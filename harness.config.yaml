@@ -13,11 +13,31 @@ harness_version: 1
 #
 # agent: "claude -p < {prompt_file}"
 
-# The gate. `verify` is typecheck + unit tests + build — deliberately not
-# `test:e2e`, which runs all sixteen scenarios and stays red until the last
-# requirement lands. The per-requirement scenario is checked by `csda
-# validate` on the branch, so a requirement cannot pass its gate without one.
-test_cmd: "npm run verify"
+# The gate, in three parts, and each one earns its place.
+#
+# `npm ci` because the harness runs each requirement in a fresh git worktree,
+# which contains only what git tracks — so there is no node_modules. Without
+# this the agent spends an attempt installing them, which is exactly what
+# happened on the first REQ-001 run: attempt 1 timed out at 900s.
+#
+# `npm run verify` is typecheck + unit tests + build.
+#
+# `test:e2e -- {feature_file}` runs the scenario belonging to the requirement
+# under test, and only that one — the full suite stays red until the last
+# requirement lands, so it cannot be the gate.
+#
+# That filtering only works because `cucumber.json` no longer sets `paths`. It
+# used to, and a config `paths` silently overrides the CLI argument: the gate
+# ran all sixteen scenarios and failed on the thirteen nobody has built yet.
+# Cucumber discovers `features/**/*.feature` on its own, so the key was
+# redundant as well as harmful.
+#
+# That third part is not optional garnish. The gate runs *before* `csda done`,
+# so the requirement is still Draft and `validate --strict-tdd` does not demand
+# its test either. Without it the loop can mark a requirement Implemented with
+# its scenario never executed, which is what the first REQ-001 run did — the
+# scenario passed because the agent did the job, not because anything checked.
+test_cmd: "npm ci && npm run verify && npm run test:e2e -- {feature_file}"
 
 # Three attempts, each fed the previous failure. Beyond that the loop is
 # usually stuck on something a human has to read.
