@@ -1,0 +1,26 @@
+# Per-project defaults for `csda harness run`. Every key is optional and any
+# CLI flag overrides the file.
+harness_version: 1
+
+# The agent invocation. `{prompt_file}` is substituted with the path to the
+# generated per-requirement prompt.
+#
+# Left commented on purpose: which agent runs this is the operator's choice
+# and their credentials, and a default here would be a default someone pays
+# for by accident. Pass it explicitly:
+#
+#   csda harness run --req REQ-001 --agent "claude -p < {prompt_file}"
+#
+# agent: "claude -p < {prompt_file}"
+
+# The gate. `verify` is typecheck + unit tests + build — deliberately not
+# `test:e2e`, which runs all sixteen scenarios and stays red until the last
+# requirement lands. The per-requirement scenario is checked by `csda
+# validate` on the branch, so a requirement cannot pass its gate without one.
+test_cmd: "npm run verify"
+
+# Three attempts, each fed the previous failure. Beyond that the loop is
+# usually stuck on something a human has to read.
+max_attempts: 3
+
+prompt_prefix_file: ./.harness/prompt-prefix.md
