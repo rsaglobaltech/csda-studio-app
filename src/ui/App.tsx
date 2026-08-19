@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ErrorBanner } from "./ErrorBanner";
 import { HealthBadge } from "./HealthBadge";
 import { PackPicker } from "./PackPicker";
+import { RequirementsList } from "./RequirementsList";
+import { browseRequirements } from "../application/browse-requirements";
 import type { HealthPort } from "../application/ports/health-port";
 import type { PackParserPort } from "../application/ports/pack-parser-port";
 import type { PackSourcePort } from "../application/ports/pack-source-port";
@@ -21,6 +23,11 @@ export function App({
   // share them.
   const [pack, setPack] = useState<Pack | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // UC-003 runs once per pack, not once per render: listing is what the studio
+  // did when this pack arrived, and EVT-003 should not be produced again
+  // because an unrelated piece of state changed.
+  const listing = useMemo(() => browseRequirements(pack), [pack]);
 
   // A rejected pack replaces whatever was on screen, so the studio never shows
   // an error next to entities from an earlier, unrelated file.
@@ -48,17 +55,10 @@ export function App({
           onFailed={failed}
         />
         {error ? <ErrorBanner message={error} /> : null}
-        {pack ? (
-          <section aria-label="Requirements" data-testid="requirements-panel">
-            <ul>
-              {pack.requirements.map((requirement) => (
-                <li key={requirement.id}>
-                  {requirement.id} — {requirement.title}
-                </li>
-              ))}
-            </ul>
-          </section>
-        ) : null}
+        {/* Loading a pack opens the Requirements view over it. A rejected pack
+            leaves no view at all, so the studio never lists entities from a
+            file it refused. */}
+        {pack ? <RequirementsList rows={listing.rows} /> : null}
         <p>
           Deployment health: <HealthBadge port={healthPort} />
         </p>

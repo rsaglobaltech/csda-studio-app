@@ -32,15 +32,15 @@ describe("toPack", () => {
     const document = {
       metadata: { name: "Parking Management Backend Domain Pack" },
       requirements: [
-        { id: "REQ-001", title: "Alert operators", priority: "Must" },
-        { id: "REQ-002", title: "Register vehicle entry", priority: "Must" },
+        { id: "REQ-001", title: "Alert operators", priority: "Must", status: "Draft" },
+        { id: "REQ-002", title: "Register vehicle entry", priority: "Must", status: "Draft" },
       ],
     };
     expect(toPack(document, "parking-management/backend")).toEqual({
       id: "parking-management/backend",
       requirements: [
-        { id: "REQ-001", title: "Alert operators" },
-        { id: "REQ-002", title: "Register vehicle entry" },
+        { id: "REQ-001", title: "Alert operators", priority: "Must", status: "Draft" },
+        { id: "REQ-002", title: "Register vehicle entry", priority: "Must", status: "Draft" },
       ],
     });
   });
@@ -53,13 +53,15 @@ describe("toPack", () => {
     });
   });
 
-  it("drops entries with no usable id and defaults a missing title", () => {
+  it("drops entries with no usable id and defaults every other field", () => {
     expect(toPack({ requirements: [{ title: "no id" }, null, "REQ-003", { id: "" }] }, "p")).toEqual(
       { id: "p", requirements: [] }
     );
-    expect(toPack({ requirements: [{ id: "REQ-001" }] }, "p")).toEqual({
+    // Only the id is load-bearing: a requirement the author left bare is still
+    // a requirement, and REQ-003 has to be able to list it.
+    expect(toPack({ requirements: [{ id: "REQ-001", priority: 3 }] }, "p")).toEqual({
       id: "p",
-      requirements: [{ id: "REQ-001", title: "" }],
+      requirements: [{ id: "REQ-001", title: "", priority: "", status: "" }],
     });
   });
 
@@ -99,7 +101,7 @@ describe("loadPack", () => {
     );
     expect(result.pack).toEqual({
       id: "parking-management/backend",
-      requirements: [{ id: "REQ-001", title: "First" }],
+      requirements: [{ id: "REQ-001", title: "First", priority: "", status: "" }],
     });
     expect(result.event).toEqual({
       type: "PackLoaded",

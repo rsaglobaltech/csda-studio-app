@@ -9,6 +9,9 @@
 export interface PackRequirement {
   readonly id: string;
   readonly title: string;
+  /** REQ-003: what the document said, `""` when it said nothing. */
+  readonly priority: string;
+  readonly status: string;
 }
 
 export interface Pack {
@@ -61,9 +64,23 @@ export function toPack(value: unknown, id: string): Pack | null {
 function toRequirement(value: unknown): PackRequirement[] {
   if (typeof value !== "object" || value === null) return [];
   const candidate = value as Record<string, unknown>;
-  const { id, title } = candidate;
+  const { id } = candidate;
   if (typeof id !== "string" || id === "") return [];
-  return [{ id, title: typeof title === "string" ? title : "" }];
+  // Only the id is load-bearing. Every other field records what the author
+  // wrote, verbatim; deciding what a reader sees when they wrote nothing is
+  // `requirements-list.ts`'s job, not this one's.
+  return [
+    {
+      id,
+      title: text(candidate.title),
+      priority: text(candidate.priority),
+      status: text(candidate.status),
+    },
+  ];
+}
+
+function text(value: unknown): string {
+  return typeof value === "string" ? value : "";
 }
 
 export function packLoaded(pack: Pack, loadedAt: Date): PackLoaded {
