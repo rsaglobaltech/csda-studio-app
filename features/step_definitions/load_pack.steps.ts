@@ -8,6 +8,7 @@ import type { StudioWorld } from "../support/world.ts";
 const PICKER = '[data-testid="pack-picker"]';
 const PACK_ID = '[data-testid="pack-id"]';
 const PANEL = '[data-testid="requirements-panel"]';
+const BANNER = '[data-testid="error-banner"]';
 
 Given("the studio is open with no pack loaded", async function (this: StudioWorld) {
   this.dom = installDom();
@@ -44,7 +45,14 @@ When("I pick the file {string}", async function (this: StudioWorld, path: string
   const picker = document.querySelector<HTMLElement>(PICKER);
   assert.ok(picker, "the pack picker is not rendered");
   picker.click();
-  await waitFor(() => document.querySelector(PACK_ID), `the studio to load ${path}`);
+  // Picking is over once the studio has said something about the file — the
+  // pack's id, or the reason it refused it. Waiting for the id alone would make
+  // a scenario about a rejected pack fail as a timeout instead of on its own
+  // assertion.
+  await waitFor(
+    () => document.querySelector(PACK_ID) ?? document.querySelector(BANNER),
+    `the studio to report on ${path}`
+  );
 });
 
 Then("the header shows {string}", function (this: StudioWorld, expected: string) {

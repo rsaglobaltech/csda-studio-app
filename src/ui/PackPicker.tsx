@@ -13,10 +13,12 @@ export function PackPicker({
   source,
   parser,
   onLoaded,
+  onFailed,
 }: {
   source: PackSourcePort;
   parser: PackParserPort;
   onLoaded: (pack: Pack) => void;
+  onFailed: (message: string) => void;
 }) {
   const [busy, setBusy] = useState(false);
 
@@ -25,10 +27,14 @@ export function PackPicker({
     loadPack(source, parser)
       .then((result) => {
         if (result.pack) onLoaded(result.pack);
+        else if (result.failure) onFailed(result.failure.errorMessage);
+        // Neither: the user picked nothing. There is nothing to report.
       })
-      // Nothing loads and the button becomes usable again. Telling the user
-      // what went wrong is REQ-002.
-      .catch(() => undefined)
+      // The file could not even be read. REQ-002 is that a failure reaches the
+      // user rather than dying here.
+      .catch((error: unknown) =>
+        onFailed(error instanceof Error ? error.message : "The picked file could not be read")
+      )
       .finally(() => setBusy(false));
   }
 
