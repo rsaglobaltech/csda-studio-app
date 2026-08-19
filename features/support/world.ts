@@ -1,6 +1,7 @@
 import { After, setWorldConstructor, World } from "@cucumber/cucumber";
 import type { Server } from "node:http";
 import type { DomHandle } from "./dom.ts";
+import type { Pack } from "../../src/domain/pack.ts";
 
 export class StudioWorld extends World {
   server: Server | null = null;
@@ -13,6 +14,8 @@ export class StudioWorld extends World {
   unmount: (() => void) | null = null;
   /** The file the next pick resolves to — set by the "I pick the file" step. */
   pickPath: string | null = null;
+  /** The fixture as it reads on disk, for steps that check the view against it. */
+  packOnDisk: Pack | null = null;
 }
 
 setWorldConstructor(StudioWorld);
