@@ -1,0 +1,22 @@
+# A pack whose first requirement never got an id. Valid YAML, invalid pack —
+# which is the case REQ-002 exists for: the studio must say so rather than
+# quietly listing the entries it happens to understand.
+schema_version: "1.1.0"
+
+metadata:
+  name: "Broken Parking Management Pack"
+  version: "1.1.0"
+  language: "en"
+  project_type: "backend"
+
+requirements:
+  - title: "Alert operators when parking capacity reaches a threshold"
+    priority: Must
+    description: "Operators need proactive alerts when occupancy approaches capacity."
+    status: Draft
+
+  - id: REQ-002
+    title: "Register vehicle entry when a slot is available"
+    priority: Must
+    description: "Drivers can enter only when the facility has available capacity."
+    status: Draft

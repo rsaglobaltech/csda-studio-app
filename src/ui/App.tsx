@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ErrorBanner } from "./ErrorBanner";
 import { HealthBadge } from "./HealthBadge";
 import { PackPicker } from "./PackPicker";
 import type { HealthPort } from "../application/ports/health-port";
@@ -15,9 +16,23 @@ export function App({
   packSource: PackSourcePort;
   packParser: PackParserPort;
 }) {
-  // One piece of state, held by the one component that owns both the header and
-  // the panel. A store would be premature until three components share it.
+  // Two pieces of state, held by the one component that owns the header, the
+  // banner and the panel. A store would be premature until three components
+  // share them.
   const [pack, setPack] = useState<Pack | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  // A rejected pack replaces whatever was on screen, so the studio never shows
+  // an error next to entities from an earlier, unrelated file.
+  function loaded(next: Pack) {
+    setPack(next);
+    setError(null);
+  }
+
+  function failed(message: string) {
+    setPack(null);
+    setError(message);
+  }
 
   return (
     <>
@@ -26,7 +41,13 @@ export function App({
         {pack ? <p data-testid="pack-id">{pack.id}</p> : null}
       </header>
       <main>
-        <PackPicker source={packSource} parser={packParser} onLoaded={setPack} />
+        <PackPicker
+          source={packSource}
+          parser={packParser}
+          onLoaded={loaded}
+          onFailed={failed}
+        />
+        {error ? <ErrorBanner message={error} /> : null}
         {pack ? (
           <section aria-label="Requirements" data-testid="requirements-panel">
             <ul>
